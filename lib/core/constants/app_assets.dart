@@ -5,4 +5,6 @@ class AppAssets {
   static const String login = 'assets/images/Frame 28.png';
   static const String rightArrow = 'assets/images/Arrow_05 (1).png';
   static const String leftArrow = 'assets/images/Arrow_05.png';
+  static const String auth = 'assets/images/Frame 33.png';
+  
 }

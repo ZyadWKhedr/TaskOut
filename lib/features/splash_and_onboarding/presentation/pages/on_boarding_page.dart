@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:liquid_swipe/liquid_swipe.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:task_out/core/constants/app_assets.dart';
@@ -8,6 +9,7 @@ import 'package:task_out/core/utils/app_sizes.dart';
 import 'package:task_out/core/extensions/spacing_extension.dart';
 import 'package:task_out/core/widgets/custom_text_widget.dart';
 import 'package:task_out/features/splash_and_onboarding/presentation/widgets/onboarding_navigation_button.dart';
+import 'package:task_out/routes/routes.dart';
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({super.key});
@@ -29,22 +31,22 @@ class _OnboardingPageState extends State<OnboardingPage> {
     },
     {
       'image': AppAssets.onboarding2,
-      'title': 'Collaborate with Team',
+      'title': 'Smart Reminders for Your Tasks',
       'description':
-          'Share tasks with your team members and work together seamlessly on projects.',
+          'Never miss a deadline. Get notifications for important tasks and stay ahead.',
     },
     {
       'image': AppAssets.onboarding3,
-      'title': 'Track Your Progress',
+      'title': 'Your Tasks, Your Way',
       'description':
-          'Visualize your achievements and stay motivated with our progress tracking system.',
+          'Customize categories, set priorities, and organize your workflow the way you like.',
     },
   ];
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    AppSizes.init(context); // Initialize sizes once context is ready
+    AppSizes.init(context);
   }
 
   Widget _buildOnboardingPage(Map<String, String> data) {
@@ -52,8 +54,8 @@ class _OnboardingPageState extends State<OnboardingPage> {
       color: AppColors.backgroundColor,
       padding: EdgeInsets.symmetric(horizontal: AppSizes.paddingMd),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          (AppSizes.paddingXl * 2).h,
           Image.asset(data['image']!),
           AppSizes.paddingMd.h,
           AnimatedSmoothIndicator(
@@ -61,27 +63,30 @@ class _OnboardingPageState extends State<OnboardingPage> {
             count: onboardingData.length,
             effect: ScrollingDotsEffect(
               activeDotColor: AppColors.mainColor,
-              dotColor: AppColors.secondaryColor,
-              dotHeight: AppSizes.blockWidth * 2,
-              dotWidth: AppSizes.blockWidth * 6,
-              spacing: AppSizes.blockWidth * 2,
+              dotColor: AppColors.teritaryColor,
+              dotHeight: AppSizes.blockHeight / 1.4,
+              dotWidth: AppSizes.blockWidth * 8,
+              spacing: AppSizes.blockWidth * 3,
+              radius: 0,
+              activeDotScale: AppSizes.blockHeight / 7,
             ),
           ),
           AppSizes.paddingMd.h,
           CustomText(
             data['title']!,
             fontSize: AppSizes.textXl,
-            fontWeight: FontWeight.bold,
+            fontWeight: FontWeight.w500,
             color: AppColors.mainColor,
             textAlign: TextAlign.center,
           ),
           AppSizes.paddingSm.h,
           CustomText(
             data['description']!,
-            fontSize: AppSizes.textMd,
+            fontSize: AppSizes.textLg * 0.8,
             color: AppColors.mainColor,
             textAlign: TextAlign.center,
           ),
+          AppSizes.paddingLg.h,
         ],
       ),
     );
@@ -90,7 +95,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   void onDone() async {
     await PreferencesService().setOnboardingComplete();
     if (mounted) {
-      Navigator.pushReplacementNamed(context, '/home');
+      context.pushReplacement(AppRoutes.auth);
     }
   }
 
@@ -111,7 +116,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
             waveType: WaveType.circularReveal,
           ),
           Positioned(
-            bottom: AppSizes.blockHeight * 5,
+            bottom: AppSizes.blockHeight * 9,
             left: 0,
             right: 0,
             child: Column(
@@ -145,7 +150,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
                     onNext: () {
                       controller.animateToPage(
                         page: currentPage + 1,
-                        duration: 600,
+                        duration: 400,
                       );
                     },
                   ),

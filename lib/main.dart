@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_out/features/splash_and_onboarding/presentation/pages/on_boarding_page.dart';
+import 'package:task_out/core/constants/app_colors.dart';
 import 'package:task_out/routes/app_router.dart';
 
 void main() {
@@ -12,9 +12,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: OnboardingPage());
-    // return MaterialApp.router(
-    //   routerConfig: router,
-    // );
+    return MaterialApp.router(
+      debugShowCheckedModeBanner: false,
+      routerConfig: router,
+      theme: ThemeData(scaffoldBackgroundColor: AppColors.backgroundColor),
+    );
   }
 }
