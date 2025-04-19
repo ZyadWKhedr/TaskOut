@@ -19,13 +19,23 @@ class AuthRepoImpl implements AuthRepository {
   /// Sign in using email and password
   @override
   Future<UserEntity> signInWithEmail(String email, String password) async {
-    final response = await supabase.auth.signInWithPassword(
-      email: email,
-      password: password,
-    );
-    final user = response.user;
-    if (user == null) throw Exception('Sign-in failed');
-    return UserModel.fromMap(user.toJson());
+    try {
+      final response = await supabase.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+
+      final user = response.user;
+      if (user == null) {
+        throw Exception('Invalid email or password');
+      }
+
+      return UserModel.fromMap(user.toJson());
+    } on AuthException catch (e) {
+      throw Exception(e.message);
+    } catch (e) {
+      throw Exception('Unexpected error: $e');
+    }
   }
 
   /// Placeholder for Facebook sign-in (not implemented)

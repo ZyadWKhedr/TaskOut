@@ -14,76 +14,46 @@ import 'package:task_out/features/auth/presentation/widgets/login_image.dart';
 import 'package:task_out/features/auth/presentation/widgets/back_button_icon.dart';
 import 'package:task_out/routes/routes.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+class SignupPage extends ConsumerStatefulWidget {
+  const SignupPage({super.key});
 
   @override
-  ConsumerState<LoginPage> createState() => _LoginPageState();
+  ConsumerState<SignupPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _LoginPageState extends ConsumerState<SignupPage> {
+  final _nameController = TextEditingController();
+
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
+  String? _nameError;
   String? _emailError;
   String? _passwordError;
 
-  void _login() async {
+  void _signup() async {
+    final name = _nameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
 
+    final nameValidation = InputValidator.validateName(name);
     final emailValidation = InputValidator.validateEmail(email);
     final passwordValidation = InputValidator.validatePassword(password);
 
     setState(() {
+      _nameError = nameValidation;
       _emailError = emailValidation;
       _passwordError = passwordValidation;
     });
 
-    if (emailValidation == null && passwordValidation == null) {
-      await ref.read(authStateProvider.notifier).signIn(email, password);
-
-      final state = ref.read(authStateProvider);
-      if (state.hasError) {
-        final error = (state as AsyncError).error;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error.toString())));
-      } else {
-        context.pushReplacement(AppRoutes.home);
-        _passwordController.clear();
-        _emailController.clear();
-      }
-    }
-  }
-
-  void _resetPassword() async {
-    final email = _emailController.text.trim();
-
-    final emailValidation = InputValidator.validateEmail(email);
-
-    setState(() {
-      _emailError = emailValidation;
-    });
-
-    if (emailValidation == null) {
-      await ref.read(authStateProvider.notifier).resetPassword(email);
-
-      final state = ref.read(authStateProvider);
-      if (state.hasError) {
-        final error = (state as AsyncError).error;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text(error.toString())));
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(
-              'Password reset email sent! Please check your inbox.',
-            ),
-          ),
-        );
-      }
+    if (nameValidation == null &&
+        emailValidation == null &&
+        passwordValidation == null) {
+      await ref.read(authStateProvider.notifier).signUp(name, email, password);
+      context.pushReplacement(AppRoutes.login);
+      _passwordController.clear();
+      _emailController.clear();
+      _nameController.clear();
     }
   }
 
@@ -99,20 +69,26 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               children: [
                 Padding(padding: EdgeInsets.all(AppSizes.paddingXl * 2)),
 
-                const LoginImage(),
-
                 Padding(
-                  padding: EdgeInsets.only(right: AppSizes.paddingXl * 4),
+                  padding: EdgeInsets.only(right: AppSizes.paddingXl * 2.5),
                   child: WelcomeTextSection(
-                    onActionTap:
-                        () => context.pushReplacement(AppRoutes.register),
-                    title: 'Welcome back!',
-                    message: 'Login below or ',
-                    actionText: 'create an account',
+                    onActionTap: () => context.pushReplacement(AppRoutes.login),
+                    title: 'Create an account',
+                    message: 'Enter your account details below or ',
+                    actionText: 'log in',
                   ),
                 ),
 
                 20.h,
+
+                _buildInputField(
+                  controller: _nameController,
+                  hintText: 'Username',
+                  errorText: _nameError,
+                  keyboardType: TextInputType.name,
+                  textInputAction: TextInputAction.next,
+                  onChanged: () => setState(() => _nameError = null),
+                ),
 
                 _buildInputField(
                   controller: _emailController,
@@ -135,7 +111,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 18.h,
 
                 AnimatedButton(
-                  onTap: isLoading ? null : _login,
+                  onTap: isLoading ? null : _signup,
                   borderRadius: BorderRadius.circular(
                     AppSizes.borderRadiusSm / 2,
                   ),
@@ -144,7 +120,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   padding: EdgeInsets.all(AppSizes.paddingSm * 1.2),
                   child: Center(
                     child: CustomText(
-                      isLoading ? 'Logging in...' : 'Login',
+                      isLoading ? 'Signing Up...' : 'Sign Up',
                       color: Colors.white,
                       fontSize: AppSizes.textMd,
                       fontWeight: FontWeight.w700,
@@ -152,15 +128,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   ),
                 ),
                 30.h,
-                GestureDetector(
-                  onTap: isLoading ? null : _resetPassword,
-                  child: CustomText(
-                    'Forgot Password',
-                    color: AppColors.mainColor,
-                    fontWeight: FontWeight.w700,
-                    underline: true,
-                  ),
-                ),
               ],
             ),
           ),

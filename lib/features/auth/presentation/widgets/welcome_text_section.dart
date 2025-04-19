@@ -4,9 +4,18 @@ import 'package:task_out/core/constants/app_colors.dart';
 import 'package:task_out/core/widgets/custom_text_widget.dart';
 
 class WelcomeTextSection extends StatelessWidget {
-  final VoidCallback onSignUpTap;
+  final String title;
+  final String message;
+  final String actionText;
+  final VoidCallback onActionTap;
 
-  const WelcomeTextSection({super.key, required this.onSignUpTap});
+  const WelcomeTextSection({
+    super.key,
+    required this.title,
+    required this.message,
+    required this.actionText,
+    required this.onActionTap,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +25,7 @@ class WelcomeTextSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomText(
-            'Welcome back!',
+            title,
             fontSize: AppSizes.textLg * 1.4,
             color: AppColors.mainColor,
             fontWeight: FontWeight.bold,
@@ -29,14 +38,14 @@ class WelcomeTextSection extends StatelessWidget {
                 color: AppColors.mainColor,
               ),
               children: [
-                const TextSpan(text: 'Login below or '),
+                TextSpan(text: message),
                 WidgetSpan(
                   alignment: PlaceholderAlignment.baseline,
                   baseline: TextBaseline.alphabetic,
                   child: GestureDetector(
-                    onTap: onSignUpTap,
+                    onTap: onActionTap,
                     child: Text(
-                      'create an account',
+                      actionText,
                       style: TextStyle(
                         color: AppColors.secondaryColor,
                         fontSize: AppSizes.textSm * 1.23,
