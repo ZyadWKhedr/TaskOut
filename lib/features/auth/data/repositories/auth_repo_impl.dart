@@ -8,6 +8,7 @@ class AuthRepoImpl implements AuthRepository {
 
   AuthRepoImpl(this.supabase);
 
+  /// Get the currently signed-in user
   @override
   Future<UserEntity?> getCurrentUser() async {
     final user = supabase.auth.currentUser;
@@ -15,6 +16,7 @@ class AuthRepoImpl implements AuthRepository {
     return UserModel.fromMap(user.toJson());
   }
 
+  /// Sign in using email and password
   @override
   Future<UserEntity> signInWithEmail(String email, String password) async {
     final response = await supabase.auth.signInWithPassword(
@@ -22,27 +24,30 @@ class AuthRepoImpl implements AuthRepository {
       password: password,
     );
     final user = response.user;
-    if (user == null) throw Exception('Signin failed');
+    if (user == null) throw Exception('Sign-in failed');
     return UserModel.fromMap(user.toJson());
   }
 
+  /// Placeholder for Facebook sign-in (not implemented)
   @override
   Future<UserEntity> signInWithFacebook() {
-    // TODO: implement signInWithFacebook
-    throw UnimplementedError();
+    throw UnimplementedError('Sign in with Facebook is not implemented');
   }
 
+  /// Placeholder for Google sign-in (not implemented)
   @override
   Future<UserEntity> signInWithGoogle() {
-    // TODO: implement signInWithGoogle
-    throw UnimplementedError();
+    throw UnimplementedError('Sign in with Google is not implemented');
   }
 
+  /// Sign out the currently signed-in user
   @override
   Future<void> signOut() async {
     await supabase.auth.signOut();
   }
 
+  /// Sign up using email, password, and a custom name field
+  /// Sends a confirmation email with a confirmation link
   @override
   Future<UserEntity> signUpWithEmail(
     String name,
@@ -55,7 +60,13 @@ class AuthRepoImpl implements AuthRepository {
       data: {'name': name},
     );
     final user = response.user;
-    if (user == null) throw Exception('Signup failed');
+    if (user == null) throw Exception('Sign-up failed');
     return UserModel.fromMap(user.toJson());
+  }
+
+  /// Send a password reset email with a reset link
+  @override
+  Future<void> sendPasswordResetEmail(String email) async {
+    await supabase.auth.resetPasswordForEmail(email);
   }
 }

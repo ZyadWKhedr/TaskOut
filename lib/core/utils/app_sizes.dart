@@ -29,4 +29,15 @@ class AppSizes {
   static double get paddingMd => blockWidth * 4;
   static double get paddingLg => blockWidth * 6;
   static double get paddingXl => blockWidth * 8;
+
+  /// Border radius values (responsive)
+  static double get borderRadiusSm => blockWidth * 2;
+  static double get borderRadiusMd => blockWidth * 3;
+  static double get borderRadiusLg => blockWidth * 5;
+
+  /// Shadow blur radius
+  static double get shadowBlurRadius => blockWidth * 2;
+
+  /// Shadow offset Y
+  static double get shadowOffsetY => blockHeight * 0.5;
 }

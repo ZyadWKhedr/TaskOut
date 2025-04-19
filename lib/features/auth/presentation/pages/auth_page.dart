@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:task_out/core/constants/app_assets.dart';
 import 'package:task_out/core/constants/app_colors.dart';
 import 'package:task_out/core/utils/app_sizes.dart';
 import 'package:task_out/core/widgets/custom_text_widget.dart';
+import 'package:task_out/routes/routes.dart';
 
 class AuthPage extends StatelessWidget {
   const AuthPage({super.key});
@@ -48,7 +50,7 @@ class AuthPage extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    // Handle login
+                    context.push(AppRoutes.login);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.mainColor,
@@ -76,7 +78,7 @@ class AuthPage extends StatelessWidget {
                 width: double.infinity,
                 child: OutlinedButton(
                   onPressed: () {
-                    // Handle sign up
+                    context.push(AppRoutes.register);
                   },
                   style: OutlinedButton.styleFrom(
                     side: BorderSide(color: AppColors.mainColor, width: 2.4),

@@ -9,6 +9,10 @@ class CustomText extends StatelessWidget {
   final TextAlign textAlign;
   final int? maxLines;
   final TextOverflow? overflow;
+  final bool underline;
+  final Color? underlineColor;
+  final double underlineThickness;
+  final TextDecorationStyle underlineStyle;
 
   const CustomText(
     this.text, {
@@ -19,6 +23,10 @@ class CustomText extends StatelessWidget {
     this.textAlign = TextAlign.start,
     this.maxLines,
     this.overflow,
+    this.underline = false,
+    this.underlineColor,
+    this.underlineThickness = 1.0,
+    this.underlineStyle = TextDecorationStyle.solid,
   }) : super(key: key);
 
   @override
@@ -35,6 +43,10 @@ class CustomText extends StatelessWidget {
         fontSize: fontSize ?? AppSizes.textMd,
         fontWeight: fontWeight,
         color: color ?? Colors.black,
+        decoration: underline ? TextDecoration.underline : TextDecoration.none,
+        decorationColor: underlineColor ?? color ?? Colors.black,
+        decorationThickness: underlineThickness,
+        decorationStyle: underlineStyle,
       ),
     );
   }

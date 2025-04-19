@@ -28,8 +28,9 @@ class AuthNotifier extends StateNotifier<AsyncValue<UserEntity?>> {
   Future<void> signUp(String email, String password, String name) async {
     try {
       state = const AsyncValue.loading();
-      final user = await repository.signUpWithEmail(email, password, name);
+      final user = await repository.signUpWithEmail(name, email, password);
       state = AsyncValue.data(user);
+      // ✅ Supabase automatically sends a confirmation email on sign-up — no extra step needed here.
     } catch (e, st) {
       state = AsyncValue.error(ServerFailure(e.toString()), st);
     }
@@ -72,6 +73,17 @@ class AuthNotifier extends StateNotifier<AsyncValue<UserEntity?>> {
       state = const AsyncValue.data(null);
     } catch (e, st) {
       state = AsyncValue.error(ServerFailure('Logout failed: ${e.toString()}'), st);
+    }
+  }
+
+  /// Send password reset email
+  Future<void> resetPassword(String email) async {
+    try {
+      state = const AsyncValue.loading();
+      await repository.sendPasswordResetEmail(email);
+      state = state = AsyncValue.data(state.value);  // keep the user state unchanged
+    } catch (e, st) {
+      state = AsyncValue.error(ServerFailure('Password reset failed: ${e.toString()}'), st);
     }
   }
 }

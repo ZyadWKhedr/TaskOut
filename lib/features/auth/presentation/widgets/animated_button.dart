@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:task_out/core/utils/app_sizes.dart';
 
 class AnimatedButton extends StatefulWidget {
   final VoidCallback? onTap;
@@ -10,6 +10,7 @@ class AnimatedButton extends StatefulWidget {
   final EdgeInsetsGeometry? padding;
   final Color? backgroundColor;
   final BorderRadius? borderRadius;
+  final double? width;
   final bool enabled;
 
   const AnimatedButton({
@@ -22,6 +23,7 @@ class AnimatedButton extends StatefulWidget {
     this.padding,
     this.backgroundColor,
     this.borderRadius,
+    this.width,
     this.enabled = true,
   });
 
@@ -49,6 +51,8 @@ class _AnimatedButtonState extends State<AnimatedButton>
 
   @override
   Widget build(BuildContext context) {
+    AppSizes.init(context); // make sure sizes are initialized
+
     return MouseRegion(
       cursor:
           widget.enabled && widget.onTap != null
@@ -71,18 +75,18 @@ class _AnimatedButtonState extends State<AnimatedButton>
           builder: (context, child) {
             return Transform.scale(
               scale: _scaleAnimation.value,
-              child: DecoratedBox(
+              child: Container(
+                width: widget.width, 
                 decoration: BoxDecoration(
                   color: widget.backgroundColor ?? Colors.blue,
                   borderRadius:
-                      widget.borderRadius ?? BorderRadius.circular(8.r),
+                      widget.borderRadius ??
+                      BorderRadius.circular(AppSizes.blockWidth * 2),
                 ),
-                child: Padding(
-                  padding: widget.padding ?? EdgeInsets.all(12.r),
-                  child: Opacity(
-                    opacity: widget.enabled ? 1.0 : 0.6,
-                    child: child,
-                  ),
+                padding: widget.padding ?? EdgeInsets.all(AppSizes.paddingSm),
+                child: Opacity(
+                  opacity: widget.enabled ? 1.0 : 0.6,
+                  child: child,
                 ),
               ),
             );

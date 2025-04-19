@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:task_out/core/utils/app_sizes.dart';
+import 'package:task_out/core/extensions/spacing_extension.dart';
+import 'package:task_out/core/constants/app_colors.dart';
 
-class TextInputField extends StatelessWidget {
+class TextInputField extends StatefulWidget {
   const TextInputField({
     super.key,
     required this.hintText,
     this.errorText,
     this.obscureText = false,
+    this.isPasswordField = false,
     this.controller,
     this.keyboardType,
     this.textInputAction,
@@ -20,6 +23,7 @@ class TextInputField extends StatelessWidget {
   final String hintText;
   final String? errorText;
   final bool obscureText;
+  final bool isPasswordField;
   final TextEditingController? controller;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
@@ -30,76 +34,82 @@ class TextInputField extends StatelessWidget {
   final FormFieldValidator<String>? validator;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDarkMode = theme.brightness == Brightness.dark;
+  State<TextInputField> createState() => _TextInputFieldState();
+}
 
+class _TextInputFieldState extends State<TextInputField> {
+  late bool _isObscured;
+
+  @override
+  void initState() {
+    super.initState();
+    _isObscured = widget.obscureText;
+  }
+
+  void _toggleVisibility() {
+    setState(() {
+      _isObscured = !_isObscured;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.paddingMd / 2),
           decoration: BoxDecoration(
-            color: isDarkMode ? theme.colorScheme.surfaceVariant : Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
             border: Border.all(
               color:
-                  errorText != null
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.outline.withOpacity(0.3),
+                  widget.errorText != null
+                      ? Colors.redAccent
+                      : AppColors.mainColor,
             ),
-            boxShadow: [
-              if (!isDarkMode)
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 8.r,
-                  offset: Offset(0, 2.h),
-                ),
-            ],
           ),
           child: TextField(
-            controller: controller,
-            onChanged: onChanged,
-            onSubmitted: onSubmitted,
-            obscureText: obscureText,
-            keyboardType: keyboardType,
-            textInputAction: textInputAction,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurface,
+            controller: widget.controller,
+            onChanged: widget.onChanged,
+            onSubmitted: widget.onSubmitted,
+            obscureText:
+                widget.isPasswordField ? _isObscured : widget.obscureText,
+            keyboardType: widget.keyboardType,
+            textInputAction: widget.textInputAction,
+            style: TextStyle(
+              fontSize: AppSizes.textMd,
+              color: AppColors.mainColor,
             ),
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: hintText,
-              hintStyle: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.5),
-              ),
-              prefixIcon:
-                  prefixIcon != null
-                      ? Padding(
-                        padding: EdgeInsets.only(right: 8.w),
-                        child: IconTheme(
-                          data: IconThemeData(
-                            color: theme.colorScheme.onSurface.withOpacity(0.6),
-                          ),
-                          child: prefixIcon!,
+              hintText: widget.hintText,
+              suffixIcon:
+                  widget.isPasswordField
+                      ? GestureDetector(
+                        onTap: _toggleVisibility,
+                        child: Icon(
+                          _isObscured
+                              ? Icons.visibility_off_outlined
+                              : Icons.visibility_outlined,
+                          color: AppColors.mainColor,
                         ),
                       )
-                      : null,
-              suffixIcon: suffixIcon,
-              contentPadding: EdgeInsets.symmetric(vertical: 16.h),
+                      : widget.suffixIcon,
+              contentPadding: EdgeInsets.symmetric(
+                vertical: AppSizes.blockHeight * 2,
+              ),
             ),
           ),
         ),
-        if (errorText != null) ...[
-          SizedBox(height: 4.h),
+        if (widget.errorText != null) ...[
+          AppSizes.blockHeight.h,
           Padding(
-            padding: EdgeInsets.only(left: 16.w),
+            padding: EdgeInsets.only(left: AppSizes.paddingMd),
             child: Text(
-              errorText!,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.error,
-              ),
+              widget.errorText!,
+              style: TextStyle(color: Colors.redAccent),
             ),
           ),
         ],
