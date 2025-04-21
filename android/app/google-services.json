@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "647646592008",
+    "project_id": "pioneeracademy-caa2d",
+    "storage_bucket": "pioneeracademy-caa2d.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:647646592008:android:60fcc9577a943f43ca65bd",
+        "android_client_info": {
+          "package_name": "com.example.task_out"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDCLII2XQCDfJTZDlhtdeq7PAL9R36RdL4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

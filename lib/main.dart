@@ -1,19 +1,15 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:task_out/core/constants/app_colors.dart';
 import 'package:task_out/core/utils/app_sizes.dart';
+import 'package:task_out/firebase_options.dart';
 import 'package:task_out/routes/app_router.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: 'assets/.env');
 
-  await Supabase.initialize(
-    url: dotenv.env['supabaseUrl']!,
-    anonKey: dotenv.env['supabaseAnonKey']!,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const ProviderScope(child: MyApp()));
 }
 

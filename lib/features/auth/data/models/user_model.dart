@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:task_out/features/auth/domain/entities/user_entity.dart';
 
 class UserModel extends UserEntity {
-  UserModel({required super.id, required super.name, required super.email});
+  UserModel({required super.id, required super.email, required super.name});
 
-  factory UserModel.fromMap(Map<String, dynamic> data) {
-    return UserModel(id: data['id'], name: data['name'], email: data['email']);
+  factory UserModel.fromFirebaseUser(User user) {
+    return UserModel(
+      id: user.uid,
+      email: user.email ?? '',
+      name: user.displayName ?? '',
+    );
   }
 }

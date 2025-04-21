@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +12,6 @@ import 'package:task_out/features/auth/presentation/providers/auth_provider.dart
 import 'package:task_out/features/auth/presentation/widgets/animated_button.dart';
 import 'package:task_out/features/auth/presentation/widgets/text_input_field.dart';
 import 'package:task_out/features/auth/presentation/widgets/welcome_text_section.dart';
-import 'package:task_out/features/auth/presentation/widgets/login_image.dart';
 import 'package:task_out/features/auth/presentation/widgets/back_button_icon.dart';
 import 'package:task_out/routes/routes.dart';
 
@@ -49,11 +50,25 @@ class _LoginPageState extends ConsumerState<SignupPage> {
     if (nameValidation == null &&
         emailValidation == null &&
         passwordValidation == null) {
-      await ref.read(authStateProvider.notifier).signUp(name, email, password);
-      context.pushReplacement(AppRoutes.login);
-      _passwordController.clear();
-      _emailController.clear();
-      _nameController.clear();
+      try {
+        await ref
+            .read(authStateProvider.notifier)
+            .signUp(name, email, password);
+
+        _passwordController.clear();
+        _emailController.clear();
+        _nameController.clear();
+
+        if (mounted) context.pushReplacement(AppRoutes.login);
+      } catch (e, st) {
+        log('SIGN UP ERROR: $e');
+        log('STACKTRACE: $st');
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Sign up failed: ${e.toString()}')),
+          );
+        }
+      }
     }
   }
 
