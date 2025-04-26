@@ -5,6 +5,8 @@ import 'package:task_out/features/home/presentation/pages/calender_page.dart';
 import 'package:task_out/features/home/presentation/pages/category_page.dart';
 import 'package:task_out/features/home/presentation/pages/profile_page.dart';
 import 'package:task_out/features/home/presentation/pages/home_screen.dart';
+import 'package:task_out/features/home/presentation/widgets/add_category_form.dart';
+import 'package:task_out/features/home/presentation/widgets/add_task_form.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -27,8 +29,8 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton:
-          _currentIndex == 3
-              ? null // Hide FAB on Profile Page (index 3)
+          _currentIndex == 3 || _currentIndex == 2
+              ? null
               : FloatingActionButton(
                 backgroundColor: AppColors.mainColor,
                 onPressed: () => _onFabPressed(context),
@@ -96,20 +98,53 @@ class _HomePageState extends State<HomePage> {
 
   void _onFabPressed(BuildContext context) {
     if (_currentIndex == 0) {
-      // Home Screen FAB action
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('FAB clicked on Home')));
+      // HomeScreen FAB: Add Task
+      _showAddTaskBottomSheet(context);
     } else if (_currentIndex == 1) {
-      // Category Page FAB action
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('FAB clicked on Category')));
-    } else if (_currentIndex == 2) {
-      // Calendar Page FAB action
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('FAB clicked on Calendar')));
+      // CategoryScreen FAB: Add Category
+      _showAddCategoryBottomSheet(context);
     }
+  }
+
+  void _showAddTaskBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 20,
+            right: 20,
+            top: 20,
+          ),
+          child: AddTaskForm(),
+        );
+      },
+    );
+  }
+
+  void _showAddCategoryBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+            left: 20,
+            right: 20,
+            top: 20,
+          ),
+          child: AddCategoryForm(),
+        );
+      },
+    );
   }
 }
