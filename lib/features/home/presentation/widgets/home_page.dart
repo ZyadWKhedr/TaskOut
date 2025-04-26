@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppColors.backgroundColor,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppSizes.borderRadiusMd),
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
@@ -40,7 +40,7 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppSizes.borderRadiusLg),
           child: BottomNavigationBar(
             currentIndex: _currentIndex,
             type: BottomNavigationBarType.fixed,
@@ -51,7 +51,7 @@ class _HomePageState extends State<HomePage> {
             unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.w400),
             unselectedFontSize: AppSizes.textSm,
             showUnselectedLabels: true,
-            backgroundColor: Colors.white, 
+            backgroundColor: Colors.white,
             onTap: (index) {
               setState(() {
                 _currentIndex = index;
