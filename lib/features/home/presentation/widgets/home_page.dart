@@ -26,6 +26,19 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton:
+          _currentIndex == 3
+              ? null // Hide FAB on Profile Page (index 3)
+              : FloatingActionButton(
+                backgroundColor: AppColors.mainColor,
+                onPressed: () => _onFabPressed(context),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    AppSizes.borderRadiusLg * 2,
+                  ),
+                ),
+                child: const Icon(Icons.add, color: Colors.white),
+              ),
       body: _pages[_currentIndex],
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -79,5 +92,24 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void _onFabPressed(BuildContext context) {
+    if (_currentIndex == 0) {
+      // Home Screen FAB action
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('FAB clicked on Home')));
+    } else if (_currentIndex == 1) {
+      // Category Page FAB action
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('FAB clicked on Category')));
+    } else if (_currentIndex == 2) {
+      // Calendar Page FAB action
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('FAB clicked on Calendar')));
+    }
   }
 }
