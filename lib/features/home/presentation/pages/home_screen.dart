@@ -21,15 +21,11 @@ class HomeScreen extends ConsumerWidget {
       data: (user) {
         final name = user?.name ?? 'Guest';
         return Padding(
-          padding: EdgeInsets.only(
-            top: AppSizes.paddingXl * 2,
-            left: AppSizes.paddingXl,
-            right: AppSizes.paddingXl,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Welcome section
+              SizedBox(height: AppSizes.blockHeight * 5),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -40,17 +36,22 @@ class HomeScreen extends ConsumerWidget {
                     fontWeight: FontWeight.w700,
                   ),
                   SizedBox(height: AppSizes.blockHeight / 1.9),
-                  CustomText(
-                    'Hope you\'re having a great day',
-                    fontSize: AppSizes.textSm,
-                    color: AppColors.mainColor,
-                    fontWeight: FontWeight.w400,
-                  ),
-                  const SizedBox(height: 20),
+                  tasks.isEmpty
+                      ? CustomText(
+                        'Let’s create your To Do List Now',
+                        fontSize: AppSizes.textSm,
+                        color: AppColors.mainColor,
+                        fontWeight: FontWeight.w400,
+                      )
+                      : CustomText(
+                        'This is your To Do List for today',
+                        fontSize: AppSizes.textSm,
+                        color: AppColors.mainColor,
+                        fontWeight: FontWeight.w400,
+                      ),
                 ],
               ),
-
-              // Task List section
+              // Task List Section
               Expanded(
                 child:
                     tasks.isEmpty
@@ -68,7 +69,7 @@ class HomeScreen extends ConsumerWidget {
                             return TaskCard(
                               task: task,
                               onDone: () {
-                                _markTaskAsDone(ref, task);
+                                _toggleTaskDone(ref, task);
                               },
                               onEdit: () {
                                 _editTask(context, ref, task);
@@ -91,10 +92,10 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  void _markTaskAsDone(WidgetRef ref, Task task) {
+  void _toggleTaskDone(WidgetRef ref, Task task) {
     final updatedTask = task.copyWith(
-      isDone: true,
-    ); // Assuming you add 'isDone' field
+      isDone: !(task.isDone ?? false), // Toggle Done <-> Undone
+    );
     ref.read(taskListProvider.notifier).updateTask(updatedTask);
   }
 
@@ -102,7 +103,7 @@ class HomeScreen extends ConsumerWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
       ),
       builder: (context) {
@@ -119,7 +120,7 @@ class HomeScreen extends ConsumerWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text('Edit Task'),
+              const Text('Edit Task'),
               const SizedBox(height: 20),
               TextField(
                 controller: titleController,

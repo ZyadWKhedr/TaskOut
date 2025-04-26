@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:task_out/core/constants/app_colors.dart';
+import 'package:task_out/core/utils/app_sizes.dart';
+import 'package:task_out/core/widgets/custom_text_widget.dart';
 import 'package:task_out/features/home/data/models/task_model.dart';
 
 class TaskCard extends StatelessWidget {
@@ -8,72 +11,149 @@ class TaskCard extends StatelessWidget {
   final VoidCallback onDelete;
 
   const TaskCard({
-    Key? key,
+    super.key,
     required this.task,
     required this.onDone,
     required this.onEdit,
     required this.onDelete,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Row(
-          children: [
-            if (task.imagePath != null) ...[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  task.imagePath!,
-                  width: 70,
-                  height: 70,
-                  fit: BoxFit.cover,
+    final isDone = task.isDone ?? false;
+
+    return SizedBox(
+      width: double.infinity,
+      height: AppSizes.blockHeight * 16,
+      child: Card(
+        color: const Color(0xffF7FBFF),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+          side: BorderSide(color: AppColors.mainColor, width: 1),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              if (task.imagePath != null) ...[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(4),
+                  child: Image.asset(
+                    task.imagePath!,
+                    width: 10,
+                    height: 10,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                const SizedBox(width: 8),
+              ],
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Title
+                    CustomText(
+                      task.title,
+                      fontSize: AppSizes.textLg,
+                      fontWeight: FontWeight.bold,
+                      maxLines: 1,
+                      color: AppColors.mainColor,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    // Description
+                    CustomText(
+                      task.description ?? '',
+                      fontSize: AppSizes.textSm,
+                      color: AppColors.mainColor,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    // Priority and Actions Row
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.bar_chart,
+                          size: 14,
+                          color: Colors.orange,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          task.priority ?? '',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        const Spacer(),
+                        // Status and actions
+                        GestureDetector(
+                          onTap: onDone,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color:
+                                  isDone
+                                      ? Colors.green.withOpacity(0.1)
+                                      : Colors.orange.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  isDone ? 'Done' : 'Undone',
+                                  style: TextStyle(
+                                    color:
+                                        isDone ? Colors.green : Colors.orange,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                const SizedBox(width: 4),
+                                Icon(
+                                  isDone
+                                      ? Icons.check_circle
+                                      : Icons.check_circle_outline,
+                                  color: isDone ? Colors.green : Colors.orange,
+                                  size: 14,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.edit,
+                            color: Colors.blue,
+                            size: 16,
+                          ),
+                          onPressed: onEdit,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                            size: 16,
+                          ),
+                          onPressed: onDelete,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 12),
             ],
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    task.title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    task.description ?? '',
-                    style: const TextStyle(fontSize: 14, color: Colors.grey),
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.done, color: Colors.green),
-                        onPressed: onDone,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.blue),
-                        onPressed: onEdit,
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.red),
-                        onPressed: onDelete,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
