@@ -4,7 +4,6 @@ import 'package:task_out/features/home/data/models/task_model.dart';
 import 'package:task_out/features/home/presentation/providers/category_list_provider.dart';
 import 'package:task_out/features/home/presentation/providers/task_provider.dart';
 import 'package:task_out/core/constants/app_colors.dart';
-import 'package:task_out/core/utils/app_sizes.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddTaskForm extends ConsumerStatefulWidget {
